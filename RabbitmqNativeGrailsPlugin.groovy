@@ -33,7 +33,7 @@ class RabbitmqNativeGrailsPlugin {
     /**
      * Version of the plugin.
      */
-    def version = "2.0.10"
+    def version = "2.0.10j1"
 
     /**
      * The version or versions of Grails the plugin is designed for.
@@ -141,9 +141,11 @@ class RabbitmqNativeGrailsPlugin {
 
         // Configure consumers
         application.messageConsumerClasses.each { GrailsClass clazz ->
-            "${clazz.fullName}"(clazz.clazz) { bean ->
-                bean.scope = 'singleton'
-                bean.autowire = true
+            if (application.config.rabbitmq.consumers.enabled) {
+                "${clazz.fullName}"(clazz.clazz) { bean ->
+                    bean.scope = 'singleton'
+                    bean.autowire = true
+                }
             }
         }
     }
